@@ -17,7 +17,7 @@ func handlerLogin(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("user isn't registered")
 	}
-	err = s.cfg.SetUser(user)
+	err = s.cfg.SetUser(user.Name)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,11 @@ func handlerRegister(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("couldn't set current user: %w", err)
 	}
-	fmt.Printf("User %s was created: %v\n", user.Name, user)
+	fmt.Println("User was created: ")
+	fmt.Printf("Name: %s\n", user.Name)
+	fmt.Printf("ID: %v\n", user.ID)
+	fmt.Printf("Created at: %v\n", user.CreatedAt)
+	fmt.Printf("Updated at: %v\n", user.UpdatedAt)
 	return nil
 }
 
@@ -65,14 +69,5 @@ func handlerUsers(s *state, cmd command) error {
 			fmt.Printf("* %s\n", user.Name)
 		}
 	}
-	return nil
-}
-
-func handlerAgg(s *state, cmd command) error {
-	feed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
-	if err != nil {
-		return fmt.Errorf("couldn't fetch feed: %w", err)
-	}
-	fmt.Printf("RSS Feed: %+v\n", feed)
 	return nil
 }

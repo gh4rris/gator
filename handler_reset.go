@@ -13,6 +13,10 @@ func handlerReset(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("couldn't delete users: %w", err)
 	}
+	err = s.db.DeleteFeeds(context.Background())
+	if err != nil {
+		return fmt.Errorf("couldn't delete feeds: %w", err)
+	}
 	fmt.Println("Database was reset successfully")
 	return nil
 }
