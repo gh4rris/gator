@@ -3,10 +3,13 @@ package main
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"html"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/gh4rris/gator/internal/database"
 )
 
 type RSSFeed struct {
@@ -54,4 +57,26 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 		feed.Channel.Item[i] = item
 	}
 	return &feed, nil
+}
+
+func scrapeFeeds(s *state) error {
+	feed, err := s.db.GetNextFeedToFetch(context.Background())
+	if err != nil {
+		return fmt.Errorf("couldn't get next feed: %w", err)
+	}
+	markFethedParams := database.MarkFeedFetchedParams{
+		UpdatedAt: time.Now(),
+		ID:        feed.ID,
+	}
+	if err = s.db.MarkFeedFetched(context.Background(), markFethedParams); err != nil {
+		return fmt.Errorf("couldn't mark feed: %w", err)
+	}
+	rssFeed, err := fetchFeed(context.Background(), feed.Url)
+	if err != nil {
+		return fmt.Errorf("couldn't fetch RSS Feed: %w", err)
+	}
+	for _, item := range rssFeed.Channel.Item {
+		fmt.Printf("* %s\n", item.Title)
+	}
+	return nil
 }
