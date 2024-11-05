@@ -11,7 +11,7 @@ import (
 
 func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.Args) != 2 {
-		return fmt.Errorf("usage: %s <name> <url>", cmd.Name)
+		return fmt.Errorf("usage: %s <feed_name> <url>", cmd.Name)
 	}
 	feedParams := database.CreateFeedParams{
 		ID:        uuid.New(),
