@@ -12,10 +12,10 @@ Once the program is installed you will need to set up a configuration
 file in your home directory: ~/.gatorconfig.json
 
 Copy and paste the following configuration into your json file and
-save:
+replace the values with your database connection string:
 
 {
-"db_url":"postgres://postgres:postgres@localhost:5432/gator?sslmode=disable",
+"db_url":"postgres://postgres:username@localhost:5432/database?sslmode=disable",
 "current_user_name":""
 }
 
